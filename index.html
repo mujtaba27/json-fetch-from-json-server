@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Client Side Content Management System</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="css/simple-sidebar.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">Json Data Manipulation </div>
+      <div class="list-group list-group-flush">
+        <a href="#" class="list-group-item list-group-item-action bg-light">Home</a>
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <h3 class="mt-4">JSON Data</h3>
+        <div>
+          <label class="alert-success" id="classestaken"></label>
+            <a href="#" class="btn btn-info btn-lg float-right" id="jsondownload">
+              <span class="glyphicon glyphicon-download"></span> Download JSON
+            </a>
+        </div>
+
+        <table class="table table-bordered table-hover" id="thetable">
+          <thead class="thead-dark">
+          <tr>
+            <th scope="col">Class Code</th>
+            <th scope="col">Title</th>
+            <th scope="col">Credit Hours</th>
+            <th scope="col">Content</th>
+            <th scope="col" colspan="2">Assessment (Total 100)</th>
+          </tr>
+          </thead>
+          <tbody id="tbody">
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+
+    //On Document Load get json data and show in table
+
+    jQuery.support.cors = true;
+    $( document ).ready(function() {
+      $.ajax({
+        url: 'http://localhost:3000/data',
+        dataType: 'json',
+        success: function( data ) {
+          $("#classestaken").append("I am currently taking " + data.length + " classes at UCC.");
+          if(data) {
+            var json_data;
+            $.each(data, function(i, data){
+              json_data = '<tr>'+
+                      '<th scope="row" class="dcode">'+ data.code + '</a></th>'+
+                      '<td><a href='+data.link+' target=_blank>'+data.title+'</td>'+
+                      '<td>'+data.credit+'</td>'+
+                      '<td>'+data.content+'</td>'+
+                      '<td> CA : '+data.assessment.ca+'</td>'+
+                      '<td> Exam: '+data.assessment.exam+'</td>'+
+                      '</tr>'+
+                      '<tr class="expandable" style="padding: 0px 8px 0px 8px;">'+
+                      '<td style="padding: 0px 8px 0px 8px;" colspan="6">' +
+                      '</td>'+
+                      '</tr>'
+              $(json_data).appendTo('#tbody');
+            });
+          } else {
+            json_data = '<tr>'+
+                    '<td>No Data Found</td>'+
+                    '</tr>';
+            $(json_data).appendTo('#tbody');
+          }
+          alert("Json Data Is Loaded Successfully");
+        },
+        error: function( data ) {
+          alert("There is Some Error Loading Json Data");
+          $("#classestaken").append("There Is Some Error Loading JSON Data.");
+          json_data = '<tr>'+
+                  '<td>No Data Found</td>'+
+                  '</tr>';
+          $(json_data).appendTo('#tbody');
+        }
+      });
+    });
+
+
+   // <!-- Menu Toggle Script -->
+
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+
+  //  <!-- Downloading JSon Object -->
+
+    $("#jsondownload").click(function(e) {
+      $.getJSON("http://localhost:3000/data",function(data) {
+        $("<a />", {
+          "download": "data.json",
+          "href" : "data:application/json," + encodeURIComponent(JSON.stringify(data))
+        }).appendTo("body")
+                .click(function() {
+                  $(this).remove()
+                })[0].click()
+          });
+    });
+
+    // displaying details of module.
+
+    $("#thetable").on('click', '.dcode', function() {
+      var celval = $(this).text();
+      that = $(this);
+      $.getJSON("http://localhost:3000/data",function(data) {
+        for (var i in data) {
+          if(celval == data[i].code) {
+            if ($(that).parent().next().children().children().is(":visible")) {
+              $(that).parent().css("background-color","white");
+              $(that).parent().next().children().children().hide();
+            } else {
+              $(that).parent().css("background-color","gray");
+              $(that).parent().next().children().append(
+                      '<div style="overflow: hidden; display: block;"><br>' +
+                      '<strong>Credit Weighting:</strong> '+ data[i].credit +'<br><br>' +
+                      '<strong>Title:</strong> '+ data[i].title +'<br><br>' +
+                      '<strong>Code:</strong> '+ data[i].code +'<br><br>' +
+                      '<strong>Content:</strong> '+ data[i].content +'<br><br>' +
+                      '<strong>Pre-requisite(s):</strong> None<br><br>' +
+                      '<strong>Co-requisite(s):</strong> None<br><br>' +
+                      '<strong>Teaching Method(s):</strong> 24 x 1hr(s) Lectures; 10 x 2hr(s) Practicals.<br><br>' +
+                      '<strong>Link to Course:</strong> '+ data[i].link +'<br><br>' +
+                      '<strong>Assessment:</strong> Total Marks 100: Formal Written Examination '+ data[i].assessment.exam +' marks; Continuous Assessment '+ data[i].assessment.ca +' marks (In-class Tests).<br><br>' +
+                      '</div>' +
+                      '</td>');
+            }
+          }
+        }
+      });
+    });
+
+
+  </script>
+</body>
+
+</html>

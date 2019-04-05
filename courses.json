@@ -1,0 +1,58 @@
+{"data":[
+{
+  "code": "cs6111",
+  "title": "Internet Base Application",
+  "credit": 5,
+  "content": "Programming in Javascript",
+  "assessment": {
+    "ca": 40,
+    "exam": 60
+  },
+  "link": "https://www.udemy.com/courses/search/?src=ukw&q=internet+based+applications"
+},
+{
+"code": "cs6112",
+"title": "Data Base Design And Applications",
+"credit": 5,
+"content": "Programming in SQl",
+"assessment": {"ca": 40, "exam": 60
+},
+"link": "https://www.udemy.com/courses/search/?src=ukw&q=Database+design+and+appplications"
+},
+{
+"code": "cs6113",
+"title": "Object Oriented Programming",
+"credit": 5,
+"content": "Programming in C++",
+"assessment": {
+"ca": 40, "exam": 60},
+"link": "https://www.udemy.com/courses/search/?src=ukw&q=programming+in+C%2B%2B"
+},
+{
+"code": "cs6114",
+"title": "Data Structure And Algorithms",
+"credit": 5,
+"content": "Programming in JAVA",
+"assessment": {
+"ca": 40, "exam": 60},
+"link": "https://www.udemy.com/courses/search/?src=ukw&q=data+structure+and+algorithm+using+java"
+},
+{
+"code": "cs6115",
+"title": "Machine Learning",
+"credit": 5,
+"content": "Programming in Python",
+"assessment": {"ca": 40, "exam": 60},
+"link": "https://www.udemy.com/courses/search/?src=ukw&q=Machine+Learning"
+},
+{
+"code": "cs6116",
+"title": "Data Sciences",
+"credit": 5,
+"content": "Programming in R",
+"assessment": {
+"ca": 40, "exam": 60},
+"link": "https://www.udemy.com/courses/search/?src=ukw&q=Data+Sciences+in+R"
+}
+]
+}
